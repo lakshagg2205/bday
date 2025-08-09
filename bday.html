@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Momos!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #f78ca0;
+            --color-secondary: #fe9a8b;
+            --color-accent: #fdc57b;
+            --color-bg: #FFF9F9;
+            --color-text: #4a5568;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--color-bg); }
+        ::-webkit-scrollbar-thumb { background-color: var(--color-primary); border-radius: 20px; border: 3px solid var(--color-bg); }
+        body { font-family: var(--font-body); background-color: var(--color-bg); color: var(--color-text); overflow-x: hidden; }
+        .font-display { font-family: var(--font-display); }
+        .gradient-text { background: linear-gradient(45deg, var(--color-primary), var(--color-secondary), var(--color-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .skip-link { position: absolute; top: -40px; left: 0; background: var(--color-primary); color: white; padding: 8px; z-index: 9999; transition: top 0.3s; }
+        .skip-link:focus { top: 0; }
+        #overlay { position: fixed; inset: 0; z-index: 1000; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: opacity 1s ease-in-out, visibility 1s; color: white; text-align: center; }
+        #overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('images/overlay-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px);
+            transform: scale(1.1);
+        }
+        .overlay-content { position: relative; padding: 20px; background: rgba(0, 0, 0, 0.25); border-radius: 15px; backdrop-filter: blur(3px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        #overlay.hidden { opacity: 0; visibility: hidden; }
+        .card { transform-style: preserve-3d; transition: transform 0.8s; cursor: pointer; }
+        .card.is-flipped { transform: rotateY(180deg); }
+        .card-face { backface-visibility: hidden; position: absolute; inset: 0; }
+        .card-back { transform: rotateY(180deg); }
+        .heart { position: absolute; animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-30px) rotate(15deg); opacity: 1; }
+            100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+        }
+        .balloon { position: absolute; bottom: -150px; animation: float-up 15s infinite ease-in; }
+        @keyframes float-up {
+            from { transform: translateY(0) rotate(0deg); opacity: 1; }
+            to { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+        .flame { animation: flicker 1.5s infinite; transform-origin: bottom; }
+        @keyframes flicker {
+            0%, 100% { transform: scaleY(1); opacity: 1; }
+            50% { transform: scaleY(0.8) scaleX(1.1); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <audio id="birthday-song" loop controls class="fixed bottom-4 right-4 z-50 rounded-full w-64 opacity-50 hover:opacity-100 transition-opacity">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <canvas id="confetti-canvas" class="fixed inset-0 w-full h-full z-50 pointer-events-none"></canvas>
+    <div id="overlay">
+        <div class="overlay-content">
+            <h1 class="font-display text-4xl md:text-5xl font-bold animate-pulse">For Momos</h1>
+            <p class="mt-2 text-lg">Tap anywhere to open</p>
+        </div>
+    </div>
+    <div id="main-content" class="opacity-0 transition-opacity duration-1000" tabindex="-1">
+        <div class="fixed inset-0 w-full h-full pointer-events-none">
+            <div class="balloon w-[70px] h-[90px] bg-pink-300/80 rounded-full" style="left: 10%; animation-duration: 20s;"></div>
+            <div class="balloon w-[80px] h-[100px] bg-orange-200/80 rounded-full" style="left: 30%; animation-duration: 15s; animation-delay: 2s;"></div>
+            <div class="balloon w-[60px] h-[80px] bg-amber-200/80 rounded-full" style="left: 55%; animation-duration: 25s; animation-delay: 5s;"></div>
+            <div class="balloon w-[70px] h-[90px] bg-pink-300/80 rounded-full" style="left: 80%; animation-duration: 18s; animation-delay: 1s;"></div>
+            <div class="heart text-red-300 text-6xl" style="left: 10%; top: 20%; animation-delay: 0s;">♥</div>
+            <div class="heart text-red-200 text-4xl" style="left: 80%; top: 15%; animation-delay: -2s;">♥</div>
+            <div class="heart text-red-300 text-7xl" style="left: 5%; top: 70%; animation-delay: -4s;">♥</div>
+            <div class="heart text-red-200 text-5xl" style="left: 90%; top: 60%; animation-delay: -1s;">♥</div>
+        </div>
+        <header class="text-center py-16 px-4 relative z-10">
+            <h1 class="font-display text-6xl md:text-8xl gradient-text">Happy Birthday!</h1>
+            <p class="text-xl md:text-2xl mt-4">To our one and only, <span class="font-bold text-[var(--color-primary)]">Momos, Mona Darling</span>!</p>
+        </header>
+        <main class="relative z-10 space-y-24">
+            <section class="container mx-auto px-6" aria-labelledby="message-heading">
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-12 max-w-3xl mx-auto text-center">
+                    <h2 id="message-heading" class="font-display text-4xl text-gray-800 mb-6">From Our Hearts to Yours...</h2>
+                    <p class="leading-relaxed text-lg">
+                        It’s hard to find the right words to tell you how much you mean to us. Through every crazy adventure, every late-night talk, and every moment of laughter and tears, you've been our rock. You're more than a friend—you're the heart of our squad. Thank you for being you.
+                    </p>
+                    <address class="not-italic mt-4 text-lg">Forever and always, <span class="font-bold text-[var(--color-primary)]">your squad (Laukii, Gobi, Scooty, Chotu, Gupti)</span></address>
+                </div>
+            </section>
+            <section aria-labelledby="cake-heading">
+                <h2 id="cake-heading" class="font-display text-4xl text-center text-gray-800 mb-6">Time for Cake! 🎂</h2>
+                <div class="flex justify-center items-center">
+                    <svg viewBox="0 0 100 100" width="250" height="250" role="img" aria-labelledby="cake-title">
+                        <title id="cake-title">An illustration of a birthday cake with flickering candles.</title>
+                        <path d="M 5 75 Q 50 85, 95 75" fill="#E0E0E0" stroke="#BDBDBD" stroke-width="0.5"/>
+                        <path d="M 10 75 Q 50 80, 90 75 V 60 Q 50 55, 10 60 Z" fill="var(--color-accent)"/>
+                        <path d="M 10 60 Q 50 62, 90 60 L 90 58 Q 50 56, 10 58 Z" fill="#ffffff" />
+                        <path d="M 15 58 Q 50 63, 85 58 V 43 Q 50 38, 15 43 Z" fill="var(--color-primary)"/>
+                        <path d="M 15 43 Q 50 48, 85 43 Q 75 35, 50 35 Q 25 35, 15 43 Z" fill="#ffffff"/>
+                        <rect x="30" y="25" width="4" height="10" fill="var(--color-secondary)" />
+                        <rect x="50" y="22" width="4" height="13" fill="var(--color-secondary)" />
+                        <rect x="70" y="25" width="4" height="10" fill="var(--color-secondary)" />
+                        <path class="flame" d="M 32 25 Q 34 20, 32 18 Q 30 20, 32 25 Z" fill="#FFD700" />
+                        <path class="flame" d="M 52 22 Q 54 17, 52 15 Q 50 17, 52 22 Z" fill="#FFD700" style="animation-delay: 0.2s;"/>
+                        <path class="flame" d="M 72 25 Q 74 20, 72 18 Q 70 20, 72 25 Z" fill="#FFD700" style="animation-delay: 0.4s;"/>
+                    </svg>
+                </div>
+            </section>
+            <section class="container mx-auto px-6" aria-labelledby="reasons-heading">
+                <div class="max-w-2xl mx-auto">
+                    <h2 id="reasons-heading" class="font-display text-4xl text-center text-gray-800 mb-12">A Few Reasons We Love You...</h2>
+                    <ul class="list-none bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 space-y-4">
+                        <li class="flex items-start"><span class="text-[var(--color-primary)] mr-4 mt-1 text-xl">♥</span><span>Your infectious laugh that can brighten any room.</span></li>
+                        <li class="flex items-start"><span class="text-[var(--color-primary)] mr-4 mt-1 text-xl">♥</span><span>How you always know exactly what to say (or what snack to bring).</span></li>
+                        <li class="flex items-start"><span class="text-[var(--color-primary)] mr-4 mt-1 text-xl">♥</span><span>Your incredible loyalty and the way you always have our backs.</span></li>
+                        <li class="flex items-start"><span class="text-[var(--color-primary)] mr-4 mt-1 text-xl">♥</span><span>For all the unforgettable memories we've already made, and the many more to come!</span></li>
+                    </ul>
+                </div>
+            </section>
+            <section class="container mx-auto px-6" aria-labelledby="video-heading">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 id="video-heading" class="font-display text-4xl text-gray-800 mb-12">A Special Video For You</h2>
+                    <video class="w-full rounded-2xl shadow-lg" controls loop muted autoplay>
+                        <source src="videos/1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </section>
+            <section class="container mx-auto px-6" aria-labelledby="gallery-heading">
+                <h2 id="gallery-heading" class="font-display text-4xl text-center text-gray-800 mb-12">Our Awesome Moments</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <figure class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-110 hover:-rotate-2 transition-all duration-300">
+                        <img src="images/squad-pic1.jpg" alt="A happy group photo of the squad" class="w-full h-64 object-cover" loading="lazy">
+                        <figcaption class="p-4 text-gray-600">Good times!</figcaption>
+                    </figure>
+                    <figure class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-110 hover:rotate-2 transition-all duration-300">
+                        <img src="images/squad-pic2.jpg" alt="A funny moment captured on camera" class="w-full h-64 object-cover" loading="lazy">
+                        <figcaption class="p-4 text-gray-600">Making memories.</figcaption>
+                    </figure>
+                    <figure class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-110 transition-all duration-300">
+                        <img src="images/squad-pic3.jpg" alt="A photo from an unforgettable trip" class="w-full h-64 object-cover" loading="lazy">
+                        <figcaption class="p-4 text-gray-600">Unforgettable moments.</figcaption>
+                    </figure>
+                    <figure class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-110 transition-all duration-300">
+                        <img src="images/squad-pic4.jpg" alt="A photo from an unforgettable trip" class="w-full h-64 object-cover" loading="lazy">
+                        <figcaption class="p-4 text-gray-600">Unforgettable moments.</figcaption>
+                    </figure>
+                    <figure class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-110 transition-all duration-300">
+                        <img src="images/squad-pic5.jpg" alt="A photo from an unforgettable trip" class="w-full h-64 object-cover" loading="lazy">
+                        <figcaption class="p-4 text-gray-600">Unforgettable moments.</figcaption>
+                    </figure>
+                </div>
+            </section>
+            <section aria-labelledby="wish-heading">
+                <h2 id="wish-heading" class="font-display text-4xl text-center text-gray-800 mb-12">Our Wish For You...</h2>
+                <div class="flex justify-center items-center">
+                    <div class="w-80 h-52 perspective-1000">
+                        <div class="card w-full h-full relative" id="secret-card" tabindex="0">
+                            <div class="card-face w-full h-full bg-gradient-to-br from-pink-400 to-orange-300 rounded-2xl shadow-xl flex flex-col justify-center items-center p-4">
+                                <h3 class="text-white font-bold text-2xl">Hover or Tap Me</h3>
+                            </div>
+                            <div class="card-back w-full h-full bg-white rounded-2xl shadow-xl flex justify-center items-center p-6 text-center">
+                                <p class="font-semibold">We wish you a lifetime of happiness, love, and all the success you deserve. We'll be right here cheering you on!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="text-center py-16">
+            <p>Made with ♥ for the best friend in the world.</p>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.getElementById('overlay');
+            const mainContent = document.getElementById('main-content');
+            const birthdaySong = document.getElementById('birthday-song');
+            const secretCard = document.getElementById('secret-card');
+            const launchConfetti = () => {
+                const duration = 5 * 1000;
+                const animationEnd = Date.now() + duration;
+                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+                const randomInRange = (min, max) => Math.random() * (max - min) + min;
+                const interval = setInterval(() => {
+                    const timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) return clearInterval(interval);
+                    const particleCount = 50 * (timeLeft / duration);
+                    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+                    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+                }, 250);
+            };
+            overlay.addEventListener('click', () => {
+                overlay.classList.add('hidden');
+                mainContent.style.opacity = '1';
+                mainContent.focus();
+                birthdaySong.play().catch(error => {
+                    console.warn("Audio autoplay was prevented by the browser. User must manually play.");
+                });
+                launchConfetti();
+            }, { once: true });
+            const flipCard = () => secretCard.classList.toggle('is-flipped');
+            secretCard.addEventListener('click', flipCard);
+            secretCard.addEventListener('mouseenter', () => secretCard.classList.add('is-flipped'));
+            secretCard.addEventListener('mouseleave', () => secretCard.classList.remove('is-flipped'));
+            secretCard.addEventListener('focus', () => secretCard.classList.add('is-flipped'));
+            secretCard.addEventListener('blur', () => secretCard.classList.remove('is-flipped'));
+        });
+    </script>
+</body>
+</html>
